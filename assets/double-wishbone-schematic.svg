@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-labelledby="title description">
+  <title id="title">Double-wishbone suspension geometry schematic</title>
+  <desc id="description">Side-view concept drawing showing chassis pivots, upper and lower control arms, an upright, wheel, coil spring and damper, and the spring-to-wheel travel motion ratio.</desc>
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#eaf0e9" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+      <path d="M0 0 8 4 0 8z" fill="#486c57"/>
+    </marker>
+    <marker id="arrow-soft" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse">
+      <path d="M0 0 7 3.5 0 7z" fill="#a2b2a6"/>
+    </marker>
+  </defs>
+  <rect width="760" height="360" rx="5" fill="#fbfcfa"/>
+  <rect width="760" height="360" rx="5" fill="url(#grid)"/>
+
+  <g fill="#597065" font-family="DM Mono, monospace" font-size="11" letter-spacing="1">
+    <text x="28" y="31">DOUBLE-WISHBONE · SIDE VIEW</text>
+    <text x="540" y="31">CONCEPT ONLY · NOT TO SCALE</text>
+  </g>
+
+  <g stroke="#29473a" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M82 76h282l41 31h-52l-28-17H82z" fill="#dce7de" stroke-width="2"/>
+    <path d="M120 92v37m48-37v30" fill="none" stroke="#89a092" stroke-width="5"/>
+    <circle cx="120" cy="130" r="7" fill="#f8fbf7" stroke-width="2"/>
+    <circle cx="168" cy="130" r="7" fill="#f8fbf7" stroke-width="2"/>
+
+    <path d="M125 132 475 173 169 132" fill="none" stroke="#557b64" stroke-width="10"/>
+    <path d="M125 260 475 246 169 260" fill="none" stroke="#557b64" stroke-width="10"/>
+    <circle cx="475" cy="173" r="9" fill="#f8fbf7" stroke-width="3"/>
+    <circle cx="475" cy="246" r="9" fill="#f8fbf7" stroke-width="3"/>
+    <path d="M475 173 475 246" fill="none" stroke="#29473a" stroke-width="12"/>
+
+    <path d="M481 175 520 168" fill="none" stroke="#738b7c" stroke-width="4"/>
+    <path d="M481 244 520 252" fill="none" stroke="#738b7c" stroke-width="4"/>
+
+    <circle cx="568" cy="210" r="74" fill="#f4f7f3" stroke="#a7b6aa" stroke-width="3"/>
+    <circle cx="568" cy="210" r="43" fill="#e1e9e2" stroke="#b2c0b5" stroke-width="2"/>
+    <circle cx="568" cy="210" r="11" fill="#fff" stroke="#8fa195" stroke-width="2"/>
+  </g>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M274 98 365 226" stroke="#d7725d" stroke-width="15"/>
+    <path d="M274 98 365 226" stroke="#fff8f5" stroke-width="3"/>
+    <path d="M286 116l-12 8 20 7-12 9 20 7-12 9 20 7-12 9 20 7-12 9 20 7-12 9 20 7" stroke="#4f8968" stroke-width="4"/>
+    <path d="M268 91l12 15m77 109 17 20" stroke="#9d4c3e" stroke-width="5"/>
+  </g>
+
+  <g fill="none" stroke="#99aa9e" stroke-dasharray="5 5" stroke-width="1.5">
+    <path d="M120 130 92 193M168 130 92 193M120 260 92 193M168 260 92 193"/>
+    <path d="M475 173 512 105M475 246 512 280"/>
+  </g>
+
+  <g fill="#395448" font-family="DM Mono, monospace" font-size="11">
+    <text x="86" y="115">CHASSIS PIVOTS</text>
+    <text x="194" y="158">UPPER CONTROL ARM</text>
+    <text x="194" y="280">LOWER CONTROL ARM</text>
+    <text x="489" y="138">UPRIGHT</text>
+    <text x="570" y="312" text-anchor="middle">WHEEL CENTER</text>
+    <text x="298" y="53" fill="#4f8968">COIL SPRING</text>
+    <text x="350" y="70" fill="#bc5f4d">DAMPER</text>
+  </g>
+
+  <g fill="none" stroke="#486c57" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)">
+    <path d="M312 123 343 167"/>
+    <path d="M652 181v58"/>
+  </g>
+  <g fill="#355a44" font-family="DM Mono, monospace" font-size="11">
+    <text x="335" y="132">Δx<tspan baseline-shift="sub" font-size="8">s</tspan></text>
+    <text x="661" y="213">Δx<tspan baseline-shift="sub" font-size="8">w</tspan></text>
+  </g>
+
+  <path d="M28 324h704" stroke="#dce5dc"/>
+  <g fill="#62766a" font-family="Manrope, sans-serif" font-size="12">
+    <text x="32" y="347">Motion ratio = spring travel ÷ wheel travel</text>
+    <text x="728" y="347" text-anchor="end">Measure through suspension travel</text>
+  </g>
+</svg>

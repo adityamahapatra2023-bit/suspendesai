@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" role="img" aria-labelledby="title description">
+  <title id="title">STRUT AI agent framework</title>
+  <desc id="description">A simplified system diagram. The browser sends a question and vehicle inputs to the Python agent. The agent uses a hosted language model or local planner to choose suspension tools, then returns results and an action trace. A short dataset training path creates the cascade model.</desc>
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#eaf0e9" stroke-width="1"/></pattern>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 8 4 0 8z" fill="#547b63"/></marker>
+    <style>
+      .title { font: 700 17px Manrope, sans-serif; fill: #203b30; }
+      .label { font: 700 14px Manrope, sans-serif; fill: #203b30; }
+      .body { font: 12px Manrope, sans-serif; fill: #52665b; }
+      .small { font: 10px 'DM Mono', monospace; fill: #74847a; }
+      .box { fill: #fff; stroke: #cfdacf; stroke-width: 1.5; }
+      .agent { fill: #183b30; stroke: #183b30; stroke-width: 1.5; }
+      .agent-title { font: 700 14px Manrope, sans-serif; fill: #f5faf5; }
+      .agent-body { font: 11px Manrope, sans-serif; fill: #d0ded4; }
+      .flow { fill: none; stroke: #547b63; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="900" height="430" rx="6" fill="#fbfcfa"/>
+  <rect width="900" height="430" rx="6" fill="url(#grid)"/>
+
+  <text x="24" y="35" class="small">STRUT / HOW IT WORKS</text>
+  <text x="24" y="65" class="title">Suspension design agent</text>
+
+  <rect x="24" y="100" width="174" height="112" rx="7" class="box"/>
+  <text x="42" y="132" class="label">1. Browser</text>
+  <text x="42" y="158" class="body">Question + vehicle inputs</text>
+  <text x="42" y="184" class="small">Chat and design screen</text>
+
+  <path d="M199 156h25" class="flow"/>
+  <rect x="232" y="100" width="210" height="112" rx="7" class="agent"/>
+  <text x="250" y="132" class="agent-title">2. Python agent</text>
+  <text x="250" y="158" class="agent-body">Plans tool calls and checks results</text>
+  <text x="250" y="184" class="agent-body">Maximum 4 rounds / 6 calls</text>
+
+  <path d="M443 156h24" class="flow"/>
+  <rect x="475" y="100" width="185" height="112" rx="7" class="box"/>
+  <text x="493" y="132" class="label">3. Planner</text>
+  <text x="493" y="158" class="body">Hosted AI, if configured</text>
+  <text x="493" y="181" class="body">Otherwise local rules</text>
+
+  <path d="M661 156h24" class="flow"/>
+  <rect x="693" y="100" width="183" height="112" rx="7" class="box"/>
+  <text x="711" y="132" class="label">4. Tools</text>
+  <text x="711" y="158" class="body">Calculate · compare · assess</text>
+  <text x="711" y="181" class="body">Checklist · model details</text>
+
+  <path d="M783 213v36H337v-36" class="flow"/>
+  <text x="483" y="245" class="small">Tool results go back to the agent for the next step</text>
+
+  <path d="M337 213v63" class="flow"/>
+  <rect x="232" y="282" width="445" height="52" rx="7" fill="#eff6ee" stroke="#9ebaa0" stroke-width="1.5"/>
+  <text x="454" y="305" class="label" text-anchor="middle">5. Answer + visible action trace</text>
+  <text x="454" y="324" class="small" text-anchor="middle">Agent reads inputs; it does not change vehicle settings</text>
+
+  <path d="M24 354h852" stroke="#d4ded4"/>
+  <text x="24" y="378" class="small">MODEL TRAINING / SEPARATE FROM CHAT</text>
+  <text x="24" y="405" class="body">Hugging Face data → preprocessing → epoch training → model.json → experimental cascade tool</text>
+</svg>
