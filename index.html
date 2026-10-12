@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f4f1">
+  <title>Strut | Suspension Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #192724;
+      --muted: #6c7b75;
+      --line: #dfe5df;
+      --paper: #f2f4f1;
+      --white: #fff;
+      --forest: #163d34;
+      --mint: #d6f0e5;
+      --green: #28775e;
+      --lime: #c9ee7d;
+      --coral: #df755e;
+      --amber: #d49736;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Manrope', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 13px; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 226px minmax(0, 1fr); }
+    .rail { background: #172923; color: #f4f7f3; display: flex; flex-direction: column; padding: 24px 15px 16px; min-height: 100vh; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 28px; }
+    .brand-mark { height: 31px; width: 31px; display: grid; place-items: center; border-radius: 8px; color: #16372f; background: var(--lime); font-weight: 800; font-size: 17px; }
+    .brand-name { font-size: 15px; font-weight: 800; letter-spacing: .02em; }
+    .brand-name small { display: block; margin-top: 1px; color: #a6b6ae; font-size: 9px; font-weight: 500; letter-spacing: .13em; text-transform: uppercase; }
+    .rail-label { margin: 15px 10px 8px; color: #8ea198; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .nav-list { display: grid; gap: 4px; }
+    .nav-item { width: 100%; display: flex; align-items: center; gap: 11px; border: 0; border-radius: 6px; padding: 10px 11px; color: #b8c6bf; background: transparent; text-align: left; font-size: 12px; }
+    .nav-item:hover, .nav-item.active { color: #f7fcf8; background: #294238; }
+    .nav-item.active { box-shadow: inset 2px 0 var(--lime); }
+    .nav-icon { width: 17px; text-align: center; color: #a6c5b5; font-size: 15px; }
+    .rail-spacer { flex: 1; }
+    .rail-status { display: flex; align-items: center; gap: 8px; border-top: 1px solid #34463d; padding: 15px 9px 0; color: #bdcbc4; font-size: 10px; }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #a8e079; box-shadow: 0 0 0 3px #344e3b; }
+    .main { min-width: 0; }
+    .topbar { height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 0 30px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.72); }
+    .crumb { color: var(--muted); font-size: 11px; }
+    .crumb strong { color: var(--ink); font-weight: 700; }
+    .top-actions { display: flex; align-items: center; gap: 9px; }
+    .icon-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); border-radius: 5px; color: #42544c; background: #fff; }
+    .icon-button { width: 31px; height: 31px; font-size: 15px; }
+    .secondary-button { min-height: 32px; padding: 0 11px; font-size: 10px; font-weight: 700; }
+    .secondary-button:hover, .icon-button:hover { border-color: #aabbb0; background: #f9fbf8; }
+    .top-divider { width: 1px; height: 24px; background: var(--line); margin: 0 3px; }
+    .avatar { height: 29px; width: 29px; display: grid; place-items: center; border-radius: 50%; background: #dfe9dd; color: #315447; font-size: 10px; font-weight: 800; }
+    .content { width: min(1530px, 100%); margin: 0 auto; padding: 26px 30px 38px; }
+    .page-heading { display: flex; justify-content: space-between; align-items: end; gap: 15px; margin-bottom: 19px; }
+    .eyebrow { display: flex; align-items: center; gap: 7px; color: #64766d; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow-mark { width: 6px; height: 6px; border-radius: 2px; background: var(--coral); transform: rotate(45deg); }
+    h1 { margin: 5px 0 0; font-size: 25px; line-height: 1.22; font-weight: 700; letter-spacing: 0; }
+    .heading-note { margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .header-buttons { display: flex; gap: 8px; }
+    .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; padding: 0 13px; border: 1px solid var(--forest); border-radius: 5px; color: white; background: var(--forest); font-size: 10px; font-weight: 700; }
+    .primary-button:hover { background: #22584a; }
+    .workbench { display: grid; grid-template-columns: minmax(0, 1fr) 326px; align-items: start; gap: 14px; }
+    .column { display: grid; align-content: start; gap: 13px; min-width: 0; }
+    .panel { min-width: 0; border: 1px solid var(--line); border-radius: 7px; background: var(--white); }
+    .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 47px; padding: 0 16px; border-bottom: 1px solid #edf0eb; }
+    .panel-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; }
+    .section-index { color: #91a097; font: 10px var(--mono); }
+    .panel-meta { color: var(--muted); font-size: 9px; }
+    .panel-body { padding: 15px 16px; }
+    .vehicle-row { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .field-label { display: block; margin: 0 0 6px; color: #687970; font-size: 9px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .select-wrap { position: relative; width: min(250px, 70vw); }
+    .select-input, .number-input { width: 100%; height: 34px; padding: 0 10px; border: 1px solid #dfe5de; border-radius: 4px; outline: none; color: #263b32; background: #fbfcfa; font-family: var(--mono); font-size: 11px; }
+    .select-input { appearance: none; font-family: var(--sans); font-size: 11px; font-weight: 700; }
+    .number-input:focus, .select-input:focus { border-color: #5f9b7c; box-shadow: 0 0 0 2px #d9efe2; }
+    .unit-input { position: relative; }
+    .unit-label { position: absolute; right: 9px; top: 50%; color: #88958e; font: 9px var(--mono); transform: translateY(-50%); pointer-events: none; }
+    .input-grid { display: grid; grid-template-columns: repeat(4, minmax(90px, 1fr)); gap: 10px 11px; }
+    .field { min-width: 0; }
+    .number-input { padding-right: 42px; }
+    .input-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #edf0eb; color: #829088; font-size: 9px; }
+    .input-foot strong { color: #496258; font-weight: 700; }
+    .results-head { align-items: center; }
+    .result-pills { display: flex; gap: 5px; }
+    .result-pill { padding: 5px 7px; border-radius: 3px; color: #60746b; background: #f1f5f0; font: 9px var(--mono); }
+    .result-table-wrap { overflow-x: auto; }
+    .result-table { width: 100%; min-width: 530px; border-collapse: collapse; text-align: left; }
+    .result-table th { padding: 0 9px 9px; color: #829087; font-size: 8px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+    .result-table td { padding: 10px 9px; border-top: 1px solid #edf0eb; color: #405249; font-size: 10px; white-space: nowrap; }
+    .result-table td:first-child { color: #203a30; font-weight: 800; }
+    .result-table .value { font: 11px var(--mono); color: #193d31; }
+    .front-tag, .rear-tag { display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 2px; background: #6aab86; }
+    .rear-tag { background: var(--coral); }
+    .result-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; color: #829087; font-size: 9px; }
+    .formula { color: #507463; font: 9px var(--mono); }
+    .lower-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(240px, .88fr); gap: 13px; }
+    .sketch-body { padding: 10px 12px 12px; }
+    .sketch-picture { width: 100%; height: auto; display: block; border: 1px solid #edf1ec; border-radius: 4px; }
+    .architecture-frame { overflow-x: auto; padding: 10px 12px 12px; }
+    .architecture-picture { display: block; width: 100%; min-width: 700px; height: auto; border: 1px solid #edf1ec; border-radius: 4px; }
+    .sketch-caption { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; color: #718078; font-size: 9px; }
+    .sketch-caption strong { color: #315b47; font: 10px var(--mono); }
+    .freq-body { padding: 14px 15px; }
+    .freq-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid #edf0eb; }
+    .freq-row:last-of-type { border-bottom: 0; }
+    .freq-name { color: #687970; font-size: 10px; }
+    .freq-value { color: #244c3c; font: 14px var(--mono); }
+    .freq-value small { color: #89958e; font: 9px var(--sans); }
+    .freq-track { height: 4px; margin: 3px 0 6px; overflow: hidden; border-radius: 4px; background: #edf1eb; }
+    .freq-fill { height: 100%; width: 0; border-radius: inherit; background: #76b18e; transition: width .28s ease; }
+    .freq-fill.rear { background: var(--coral); }
+    .freq-note { margin-top: 9px; color: #849189; font-size: 9px; line-height: 1.5; }
+    .risk-panel .panel-heading { min-height: 43px; }
+    .risk-body { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 13px; padding: 12px 15px; }
+    .risk-label { color: #61736a; font-size: 9px; }
+    .risk-description { margin-top: 5px; color: #87938c; font-size: 9px; line-height: 1.45; }
+    .risk-score { width: 48px; height: 48px; display: grid; place-items: center; border: 3px solid #c9e6d1; border-radius: 50%; color: #285b40; font: 11px var(--mono); }
+    .risk-score.amber { border-color: #f0d6a2; color: #93611d; }
+    .risk-score.red { border-color: #efc3b9; color: #a54737; }
+    .risk-inputs { display: grid; grid-template-columns: repeat(4, minmax(90px, 1fr)); gap: 10px; padding: 0 15px 12px; }
+    .risk-input-label { display: flex; justify-content: space-between; gap: 5px; color: #75847b; font-size: 8px; }
+    .risk-input-label output { color: #315b47; font: 9px var(--mono); }
+    .risk-input input { width: 100%; height: 15px; margin: 5px 0 0; accent-color: #598b69; }
+    .risk-disclaimer { padding: 0 15px 11px; color: #9a7a4d; font-size: 8px; }
+    .right-column { position: sticky; top: 12px; }
+    .chat-panel { display: flex; flex-direction: column; height: min(570px, calc(100vh - 90px)); min-height: 420px; overflow: hidden; }
+    .chat-heading { min-height: 56px; }
+    .bot-avatar { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 6px; color: #234c3c; background: var(--mint); font-size: 14px; }
+    .chat-title-group { display: flex; align-items: center; gap: 8px; }
+    .chat-subtitle { display: block; margin-top: 2px; color: #829087; font-size: 8px; font-weight: 500; }
+    .api-state { display: flex; align-items: center; gap: 5px; color: #799087; font-size: 8px; }
+    .api-state::before { width: 5px; height: 5px; border-radius: 50%; background: #8bc278; content: ''; }
+    .messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 15px 13px; background: #fafbf9; }
+    .message { max-width: 94%; align-self: flex-start; }
+    .message.user { align-self: flex-end; }
+    .message-name { margin: 0 0 4px 2px; color: #839088; font-size: 8px; font-weight: 700; }
+    .bubble { padding: 10px 11px; border: 1px solid #e7ece6; border-radius: 3px 9px 9px 9px; color: #405149; background: #fff; font-size: 10px; line-height: 1.65; white-space: pre-line; overflow-wrap: anywhere; }
+    .agent-trace { margin-bottom: 6px; padding: 7px 9px; border-left: 2px solid #8eb49a; color: #62766a; background: #f0f5ef; font-size: 8px; line-height: 1.5; }
+    .message.user .bubble { border-color: #e2ede5; border-radius: 9px 3px 9px 9px; color: #234436; background: #e8f2eb; }
+    .bubble strong { color: #234b39; }
+    .bubble code { padding: 1px 4px; border-radius: 3px; background: #f0f4ef; font: 9px var(--mono); }
+    .suggestions { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 12px 10px; background: #fafbf9; }
+    .suggestion { padding: 6px 8px; border: 1px solid #e0e8e1; border-radius: 4px; color: #53685d; background: white; font-size: 8px; }
+    .suggestion:hover { border-color: #8db79a; color: #254c3a; }
+    .chat-input-wrap { padding: 10px 11px; border-top: 1px solid #e8ede7; background: white; }
+    .chat-input-row { display: flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid #dfe6de; border-radius: 5px; }
+    .chat-input { flex: 1; min-width: 0; height: 29px; padding: 0 5px; border: 0; outline: 0; color: #32443a; font-size: 10px; }
+    .chat-input::placeholder { color: #a0aaa3; }
+    .send-button { width: 29px; height: 29px; border: 0; border-radius: 4px; color: white; background: var(--forest); font-size: 14px; }
+    .input-hint { display: flex; justify-content: space-between; margin-top: 7px; color: #9aa49d; font-size: 8px; }
+    .tool-panel .panel-heading { min-height: 43px; }
+    .tool-list { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 10px; }
+    .tool-button { min-height: 37px; display: flex; align-items: center; gap: 7px; padding: 0 9px; border: 1px solid #e7ece6; border-radius: 4px; color: #4a5e53; background: #fff; text-align: left; font-size: 9px; font-weight: 700; }
+    .tool-button:hover { border-color: #9cb9a1; background: #f7faf6; }
+    .tool-icon { color: #588269; font-size: 14px; }
+    .notice { display: none; position: fixed; left: 50%; bottom: 22px; z-index: 20; max-width: calc(100vw - 24px); padding: 10px 14px; border: 1px solid #c7d8ca; border-radius: 5px; color: #264c39; background: #f6fff6; box-shadow: 0 9px 30px #1729231c; font-size: 11px; transform: translateX(-50%); }
+    .notice.show { display: block; animation: rise .2s ease-out; }
+    @keyframes rise { from { opacity: 0; translate: 0 5px; } to { opacity: 1; translate: 0 0; } }
+    .loading { display: inline-flex; gap: 4px; padding: 2px; }
+    .loading i { width: 5px; height: 5px; border-radius: 50%; background: #77a58a; animation: pulse 1s infinite alternate; }
+    .loading i:nth-child(2) { animation-delay: .18s; }
+    .loading i:nth-child(3) { animation-delay: .36s; }
+    @keyframes pulse { to { opacity: .3; transform: translateY(-2px); } }
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 65px minmax(0, 1fr); }
+      .rail { padding-inline: 10px; }
+      .brand { justify-content: center; padding-inline: 0; }
+      .brand-name, .rail-label, .nav-text, .rail-status span:last-child { display: none; }
+      .nav-item { justify-content: center; padding-inline: 0; }
+      .nav-icon { width: auto; }
+      .rail-status { justify-content: center; padding-inline: 0; }
+      .workbench { grid-template-columns: minmax(0, 1fr) 300px; }
+      .content { padding-inline: 21px; }
+      .topbar { padding-inline: 21px; }
+    }
+    @media (max-width: 850px) {
+      .workbench { grid-template-columns: minmax(0, 1fr); }
+      .right-column { position: static; }
+      .chat-panel { height: 490px; min-height: 390px; }
+      .input-grid { grid-template-columns: repeat(4, minmax(72px, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .app { grid-template-columns: 1fr; padding-bottom: 55px; }
+      .rail { position: fixed; z-index: 10; right: 0; bottom: 0; left: 0; min-height: 52px; height: 52px; flex-direction: row; align-items: center; padding: 5px 10px; border-top: 1px solid #35483e; }
+      .brand, .rail-label, .rail-spacer, .rail-status { display: none; }
+      .nav-list { width: 100%; display: flex; justify-content: space-around; }
+      .nav-item { width: 48px; height: 40px; }
+      .nav-item.active { box-shadow: inset 0 -2px var(--lime); }
+      .topbar { height: 49px; padding-inline: 14px; }
+      .crumb { font-size: 9px; }
+      .top-actions .secondary-button { padding-inline: 7px; font-size: 9px; }
+      .top-actions .top-divider { display: none; }
+      .content { padding: 19px 12px 18px; }
+      .page-heading { align-items: flex-start; flex-direction: column; margin-bottom: 14px; }
+      h1 { font-size: 22px; }
+      .header-buttons { width: 100%; }
+      .header-buttons button { flex: 1; }
+      .panel-heading { padding-inline: 12px; }
+      .panel-body { padding: 12px; }
+      .input-grid { grid-template-columns: repeat(2, minmax(100px, 1fr)); gap: 10px; }
+      .vehicle-row { align-items: start; flex-direction: column; }
+      .select-wrap { width: 100%; }
+      .input-foot { align-items: start; flex-direction: column; gap: 5px; }
+      .lower-grid { grid-template-columns: minmax(0, 1fr); }
+      .result-pills .result-pill:nth-child(2) { display: none; }
+      .risk-body { padding-inline: 12px; }
+      .risk-inputs { grid-template-columns: repeat(2, minmax(100px, 1fr)); padding-inline: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail" aria-label="Main navigation">
+      <div class="brand"><div class="brand-mark">S</div><div class="brand-name">STRUT<small>engineering suite</small></div></div>
+      <div class="rail-label">Workspace</div>
+      <nav class="nav-list">
+        <button class="nav-item active" type="button" title="Design workspace"><span class="nav-icon">⌘</span><span class="nav-text">Design studio</span></button>
+        <button class="nav-item" type="button" title="Vehicle library"><span class="nav-icon">▤</span><span class="nav-text">Vehicle library</span></button>
+        <button class="nav-item" type="button" title="Setup comparisons"><span class="nav-icon">⇄</span><span class="nav-text">Comparisons</span></button>
+        <button class="nav-item" type="button" title="Saved reports"><span class="nav-icon">▧</span><span class="nav-text">Reports</span></button>
+      </nav>
+      <div class="rail-label">Resources</div>
+      <nav class="nav-list">
+        <button class="nav-item" type="button" title="Formula reference" data-prompt="Explain the suspension formulas this workbench uses"><span class="nav-icon">ƒx</span><span class="nav-text">Formula reference</span></button>
+        <button class="nav-item" type="button" title="Model card" data-prompt="Tell me about the experimental cascade risk model and its data"><span class="nav-icon">◈</span><span class="nav-text">Model card</span></button>
+      </nav>
+      <div class="rail-spacer"></div>
+      <div class="rail-status"><i class="online-dot"></i><span>Local engineering tools active</span></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">Workspace <span aria-hidden="true">/</span> <strong>Design studio</strong></div>
+        <div class="top-actions">
+          <span class="panel-meta">SI units</span>
+          <span class="top-divider"></span>
+          <button class="secondary-button" id="exportButton" type="button" title="Export a setup summary">↧ <span>Export report</span></button>
+          <div class="avatar" title="Engineering workspace">SE</div>
+        </div>
+      </header>
+      <div class="content">
+        <section class="page-heading">
+          <div>
+            <div class="eyebrow"><i class="eyebrow-mark"></i> Vehicle dynamics / suspension</div>
+            <h1>Suspension design studio</h1>
+            <div class="heading-note">First-pass spring sizing, ride targets, and setup stability in one place.</div>
+          </div>
+          <div class="header-buttons">
+            <button class="secondary-button" id="resetButton" type="button" title="Restore the selected vehicle baseline">↺ <span>Reset inputs</span></button>
+            <button class="primary-button" id="compareButton" type="button" title="Compare current setup with a softer ride target">⇄ <span>Compare setup</span></button>
+          </div>
+        </section>
+
+        <div class="workbench">
+          <div class="column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div class="panel-title"><span class="section-index">01</span> Vehicle &amp; design inputs</div>
+                <span class="panel-meta">Editable baseline · approximate reference presets</span>
+              </div>
+              <div class="panel-body">
+                <div class="vehicle-row">
+                  <div class="field">
+                    <label class="field-label" for="vehicle">Vehicle reference</label>
+                    <div class="select-wrap">
+                      <select class="select-input" id="vehicle" aria-label="Vehicle reference">
+                        <option value="custom">Custom vehicle</option>
+                        <option value="miata">Mazda MX-5 ND · reference</option>
+                        <option value="civic">Honda Civic Type R · reference</option>
+                        <option value="model3">Tesla Model 3 · reference</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="panel-meta">Values are editable estimates, not OEM specifications</div>
+                </div>
+                <div class="input-grid" id="vehicleInputs">
+                  <div class="field"><label class="field-label" for="mass">Vehicle mass</label><div class="unit-input"><input class="number-input" id="mass" type="number" min="500" max="5000" step="1" value="1250"><span class="unit-label">kg</span></div></div>
+                  <div class="field"><label class="field-label" for="frontShare">Front weight</label><div class="unit-input"><input class="number-input" id="frontShare" type="number" min="30" max="70" step="0.1" value="52"><span class="unit-label">%</span></div></div>
+                  <div class="field"><label class="field-label" for="frontUnsprung">Front unsprung</label><div class="unit-input"><input class="number-input" id="frontUnsprung" type="number" min="10" max="200" step="1" value="42"><span class="unit-label">kg / wheel</span></div></div>
+                  <div class="field"><label class="field-label" for="rearUnsprung">Rear unsprung</label><div class="unit-input"><input class="number-input" id="rearUnsprung" type="number" min="10" max="200" step="1" value="38"><span class="unit-label">kg / wheel</span></div></div>
+                  <div class="field"><label class="field-label" for="frontMotion">Front motion ratio</label><div class="unit-input"><input class="number-input" id="frontMotion" type="number" min="0.4" max="1.5" step="0.01" value="0.92"><span class="unit-label">spring / wheel</span></div></div>
+                  <div class="field"><label class="field-label" for="rearMotion">Rear motion ratio</label><div class="unit-input"><input class="number-input" id="rearMotion" type="number" min="0.4" max="1.5" step="0.01" value="0.88"><span class="unit-label">spring / wheel</span></div></div>
+                  <div class="field"><label class="field-label" for="frontFreq">Front ride target</label><div class="unit-input"><input class="number-input" id="frontFreq" type="number" min="0.5" max="5" step="0.05" value="1.65"><span class="unit-label">Hz</span></div></div>
+                  <div class="field"><label class="field-label" for="rearFreq">Rear ride target</label><div class="unit-input"><input class="number-input" id="rearFreq" type="number" min="0.5" max="5" step="0.05" value="1.82"><span class="unit-label">Hz</span></div></div>
+                </div>
+                <div class="input-foot"><span><strong>Input convention:</strong> motion ratio = spring travel / wheel travel</span><span id="inputStatus">Calculations update as you type</span></div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading results-head">
+                <div class="panel-title"><span class="section-index">02</span> First-pass spring sizing</div>
+                <div class="result-pills"><span class="result-pill">STATIC CORNER LOAD</span><span class="result-pill">LINEAR SPRING</span></div>
+              </div>
+              <div class="panel-body">
+                <div class="result-table-wrap">
+                  <table class="result-table">
+                    <thead><tr><th>Axle</th><th>Sprung / corner</th><th>Wheel rate</th><th>Spring rate</th><th>Static wheel load</th></tr></thead>
+                    <tbody>
+                      <tr><td><i class="front-tag"></i>Front</td><td class="value" id="frontSprung">—</td><td class="value" id="frontWheelRate">—</td><td class="value" id="frontSpringRate">—</td><td class="value" id="frontLoad">—</td></tr>
+                      <tr><td><i class="rear-tag"></i>Rear</td><td class="value" id="rearSprung">—</td><td class="value" id="rearWheelRate">—</td><td class="value" id="rearSpringRate">—</td><td class="value" id="rearLoad">—</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="result-foot"><span>Per-corner values · verify against packaging, travel, and measured corner weights</span><span class="formula">k<sub>s</sub> = (2πf)<sup>2</sup> m<sub>s</sub> / MR<sup>2</sup></span></div>
+              </div>
+            </section>
+
+            <div class="lower-grid">
+              <section class="panel">
+                <div class="panel-heading"><div class="panel-title"><span class="section-index">03</span> Suspension geometry</div><span class="panel-meta">Double-wishbone concept</span></div>
+                <div class="sketch-body">
+                  <img class="sketch-picture" src="/assets/double-wishbone-schematic.svg" alt="Double-wishbone side-view schematic showing the chassis pivots, upper and lower control arms, upright, wheel, coil spring, damper, and spring-to-wheel travel measurements.">
+                  <div class="sketch-caption"><span>Current motion ratios: front <strong id="diagramFront">0.92</strong> · rear <strong id="diagramRear">0.88</strong></span><span>Illustrative layout; measure actual kinematics</span></div>
+                </div>
+              </section>
+              <section class="panel">
+                <div class="panel-heading"><div class="panel-title"><span class="section-index">04</span> Ride frequency</div><span class="panel-meta">Body mode estimate</span></div>
+                <div class="freq-body">
+                  <div class="freq-row"><span class="freq-name">Front axle</span><span class="freq-value" id="frontFreqResult">— <small>Hz</small></span></div>
+                  <div class="freq-track"><div class="freq-fill" id="frontFreqBar"></div></div>
+                  <div class="freq-row"><span class="freq-name">Rear axle</span><span class="freq-value" id="rearFreqResult">— <small>Hz</small></span></div>
+                  <div class="freq-track"><div class="freq-fill rear" id="rearFreqBar"></div></div>
+                  <div class="freq-note" id="freqNote">Targets are inputs; calculated rates will be shown above.</div>
+                </div>
+              </section>
+            </div>
+
+            <section class="panel risk-panel">
+              <div class="panel-heading"><div class="panel-title"><span class="section-index">05</span> Aero-platform cascade monitor</div><span class="panel-meta" id="modelStatus">Loading model card…</span></div>
+              <div class="risk-body">
+                <div><div class="risk-label" id="riskBand">Experimental setup indicator</div><div class="risk-description" id="riskDescription">A separate four-input screening score based on the selected dataset model.</div></div>
+                <div class="risk-score" id="riskScore">—</div>
+              </div>
+              <div class="risk-inputs" aria-label="Normalized cascade model inputs">
+                <label class="risk-input"><span class="risk-input-label">Suspension stiffness <output id="stiffnessOutput">0.58</output></span><input id="cascadeStiffness" type="range" min="0" max="1" step="0.01" value="0.58" aria-label="Normalized suspension stiffness"></label>
+                <label class="risk-input"><span class="risk-input-label">Ride height <output id="heightOutput">0.50</output></span><input id="cascadeRideHeight" type="range" min="0" max="1" step="0.01" value="0.50" aria-label="Normalized ride height"></label>
+                <label class="risk-input"><span class="risk-input-label">Aero stall margin <output id="marginOutput">0.54</output></span><input id="cascadeAeroMargin" type="range" min="0" max="1" step="0.01" value="0.54" aria-label="Normalized aero stall margin"></label>
+                <label class="risk-input"><span class="risk-input-label">Vertical oscillation <output id="oscillationOutput">0.46</output></span><input id="cascadeOscillation" type="range" min="0" max="1" step="0.01" value="0.46" aria-label="Normalized vertical oscillation"></label>
+              </div>
+              <div class="risk-disclaimer">Synthetic F1 demonstration data only; not calibrated to this vehicle, telemetry, or a safety limit.</div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading"><div class="panel-title"><span class="section-index">06</span> Agent &amp; model architecture</div><span class="panel-meta">Runtime and training data flow</span></div>
+              <div class="architecture-frame">
+                <img class="architecture-picture" src="/assets/agent-framework.svg?v=2" alt="STRUT system architecture. The browser sends a question and vehicle inputs to the Python agent. The agent uses a hosted language model or local planner to choose suspension tools, then returns results and an action trace. A separate dataset training path generates the cascade model.">
+              </div>
+            </section>
+          </div>
+
+          <aside class="column right-column">
+            <section class="panel chat-panel">
+              <div class="panel-heading chat-heading">
+                <div class="chat-title-group"><div class="bot-avatar">✳</div><div class="panel-title">Suspension copilot<span class="chat-subtitle">Suspension agent · bounded tool loop</span></div></div>
+                <span class="api-state" id="apiState">Local agent</span>
+              </div>
+              <div class="messages" id="messages" aria-live="polite">
+                <div class="message"><div class="message-name">STRUT COPILOT</div><div class="bubble">I can calculate spring rates from your current vehicle inputs, explain the assumptions, compare ride targets, or inspect the demo stability model. What are you working on?</div></div>
+              </div>
+              <div class="suggestions">
+                <button class="suggestion" type="button" data-prompt="Calculate the front and rear spring rates for this setup">Calculate spring rates</button>
+                <button class="suggestion" type="button" data-prompt="Explain my ride frequencies and what they mean">Explain ride targets</button>
+                <button class="suggestion" type="button" data-prompt="What should I validate before choosing these springs?">Validation checklist</button>
+              </div>
+              <form class="chat-input-wrap" id="chatForm">
+                <div class="chat-input-row"><input class="chat-input" id="chatInput" type="text" autocomplete="off" placeholder="Ask about this suspension setup…" aria-label="Message the suspension copilot"><button class="send-button" type="submit" aria-label="Send message" title="Send message">↑</button></div>
+                <div class="input-hint"><span>Calculations use your current inputs</span><span>Enter ↵</span></div>
+              </form>
+            </section>
+
+            <section class="panel tool-panel">
+              <div class="panel-heading"><div class="panel-title">Quick tools</div><span class="panel-meta">Run an action</span></div>
+              <div class="tool-list">
+                <button class="tool-button" type="button" data-prompt="Calculate spring rates for this vehicle"><span class="tool-icon">ƒ</span>Spring calculator</button>
+                <button class="tool-button" type="button" id="compareTool"><span class="tool-icon">⇄</span>Compare targets</button>
+                <button class="tool-button" type="button" data-prompt="Give me a practical suspension validation checklist for this design"><span class="tool-icon">☷</span>Design checklist</button>
+                <button class="tool-button" type="button" data-prompt="Explain what dataset and model power the cascade monitor"><span class="tool-icon">◈</span>Model details</button>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="notice" id="notice" role="status"></div>
+  <script>
+    const presets = {
+      custom: { mass: 1250, frontShare: 52, frontUnsprung: 42, rearUnsprung: 38, frontMotion: 0.92, rearMotion: 0.88, frontFreq: 1.65, rearFreq: 1.82 },
+      miata: { mass: 1120, frontShare: 53, frontUnsprung: 39, rearUnsprung: 37, frontMotion: 0.91, rearMotion: 0.87, frontFreq: 1.55, rearFreq: 1.72 },
+      civic: { mass: 1430, frontShare: 62, frontUnsprung: 44, rearUnsprung: 40, frontMotion: 0.95, rearMotion: 0.90, frontFreq: 1.85, rearFreq: 2.05 },
+      model3: { mass: 1840, frontShare: 48, frontUnsprung: 54, rearUnsprung: 52, frontMotion: 0.90, rearMotion: 0.90, frontFreq: 1.35, rearFreq: 1.48 }
+    };
+    const fieldIds = Object.keys(presets.custom);
+    let currentModel = null;
+    let lastCalc = null;
+    let noticeTimer;
+    const byId = id => document.getElementById(id);
+    const n = id => Number(byId(id).value);
+    const format = (value, digits = 0) => Number.isFinite(value) ? value.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits }) : '—';
+
+    function getInputs() { return Object.fromEntries(fieldIds.map(id => [id, n(id)])); }
+
+    function calculate() {
+      const input = getInputs();
+      const frontCorner = (input.mass * input.frontShare / 100) / 2;
+      const rearCorner = (input.mass * (100 - input.frontShare) / 100) / 2;
+      const frontSprung = frontCorner - input.frontUnsprung;
+      const rearSprung = rearCorner - input.rearUnsprung;
+      if (frontSprung <= 0 || rearSprung <= 0 || input.frontMotion <= 0 || input.rearMotion <= 0) return null;
+      const solveAxle = (sprungMass, motionRatio, frequency, cornerMass) => {
+        const wheelRate = (2 * Math.PI * frequency) ** 2 * sprungMass;
+        const springRate = wheelRate / motionRatio ** 2;
+        return { sprungMass, wheelRate, springRate, load: cornerMass * 9.80665 };
+      };
+      const result = {
+        input,
+        front: solveAxle(frontSprung, input.frontMotion, input.frontFreq, frontCorner),
+        rear: solveAxle(rearSprung, input.rearMotion, input.rearFreq, rearCorner)
+      };
+      lastCalc = result;
+      byId('frontSprung').textContent = `${format(result.front.sprungMass, 1)} kg`;
+      byId('rearSprung').textContent = `${format(result.rear.sprungMass, 1)} kg`;
+      byId('frontWheelRate').textContent = `${format(result.front.wheelRate / 1000, 1)} N/mm`;
+      byId('rearWheelRate').textContent = `${format(result.rear.wheelRate / 1000, 1)} N/mm`;
+      byId('frontSpringRate').textContent = `${format(result.front.springRate / 1000, 1)} N/mm`;
+      byId('rearSpringRate').textContent = `${format(result.rear.springRate / 1000, 1)} N/mm`;
+      byId('frontLoad').textContent = `${format(result.front.load / 1000, 2)} kN`;
+      byId('rearLoad').textContent = `${format(result.rear.load / 1000, 2)} kN`;
+      byId('frontFreqResult').innerHTML = `${format(input.frontFreq, 2)} <small>Hz</small>`;
+      byId('rearFreqResult').innerHTML = `${format(input.rearFreq, 2)} <small>Hz</small>`;
+      byId('frontFreqBar').style.width = `${Math.min(input.frontFreq / 4 * 100, 100)}%`;
+      byId('rearFreqBar').style.width = `${Math.min(input.rearFreq / 4 * 100, 100)}%`;
+      byId('freqNote').textContent = `Rear/front frequency ratio ${format(input.rearFreq / input.frontFreq, 2)} · unsprung wheel hop and damping are not modeled.`;
+      byId('diagramFront').textContent = format(input.frontMotion, 2);
+      byId('diagramRear').textContent = format(input.rearMotion, 2);
+      updateRisk();
+      return result;
+    }
+
+    function setupFeatures() {
+      return {
+        suspension_stiffness: n('cascadeStiffness'),
+        ride_height: n('cascadeRideHeight'),
+        aero_stall_margin: n('cascadeAeroMargin'),
+        vertical_oscillation: n('cascadeOscillation')
+      };
+    }
+
+    function predictRisk(features) {
+      if (!currentModel) return null;
+      const z = features.map((value, index) => (value - currentModel.mean[index]) / currentModel.scale[index]);
+      const logit = currentModel.bias + z.reduce((sum, value, index) => sum + value * currentModel.weights[index], 0);
+      return 1 / (1 + Math.exp(-Math.max(-30, Math.min(30, logit))));
+    }
+
+    function updateRisk() {
+      const features = setupFeatures();
+      const probability = currentModel ? predictRisk(currentModel.feature_names.map(name => features[name])) : null;
+      const score = byId('riskScore');
+      score.className = 'risk-score';
+      if (probability === null) { score.textContent = '—'; byId('riskBand').textContent = 'Model not loaded'; return; }
+      score.textContent = `${Math.round(probability * 100)}%`;
+      const band = probability < 0.35 ? 'Lower demo score' : probability < 0.65 ? 'Elevated demo score' : 'Higher demo score';
+      if (probability >= 0.65) score.classList.add('red'); else if (probability >= 0.35) score.classList.add('amber');
+      byId('riskBand').textContent = band;
+      byId('riskDescription').textContent = `Illustrative cascade classification from F1-like normalized inputs · score is not a calibrated probability.`;
+    }
+
+    function renderMessage(role, text, html = false) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `message ${role === 'user' ? 'user' : ''}`;
+      const name = document.createElement('div');
+      name.className = 'message-name';
+      name.textContent = role === 'user' ? 'YOU' : 'STRUT COPILOT';
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      if (html) bubble.innerHTML = text;
+      else bubble.textContent = text;
+      wrapper.append(name, bubble);
+      byId('messages').append(wrapper);
+      byId('messages').scrollTop = byId('messages').scrollHeight;
+      return wrapper;
+    }
+
+    function asContext() {
+      const c = lastCalc || calculate();
+      if (!c) return {};
+      const features = setupFeatures();
+      return {
+        vehicle: c.input,
+        cascade_inputs: features,
+        calculations: {
+          front_sprung_mass_kg: c.front.sprungMass,
+          rear_sprung_mass_kg: c.rear.sprungMass,
+          front_spring_rate_n_per_mm: c.front.springRate / 1000,
+          rear_spring_rate_n_per_mm: c.rear.springRate / 1000,
+          front_wheel_rate_n_per_mm: c.front.wheelRate / 1000,
+          rear_wheel_rate_n_per_mm: c.rear.wheelRate / 1000,
+          front_static_load_kn: c.front.load / 1000,
+          rear_static_load_kn: c.rear.load / 1000,
+          demo_cascade_score: currentModel ? predictRisk(currentModel.feature_names.map(name => features[name])) : null
+        }
+      };
+    }
+
+    function localAnswer(message) {
+      const text = message.toLowerCase();
+      const context = asContext();
+      const c = lastCalc;
+      if (/model|dataset|cascade|risk|stability|porpois|aero/.test(text)) {
+        const score = context.calculations.demo_cascade_score;
+        return `The cascade monitor is a small logistic classifier trained for 600 epochs on the public <strong>ClarusC64 F1 suspension/ride-height/aero-stall synthetic dataset</strong>. Its four normalized inputs are generated from the ride target for illustration; a ${score === null ? 'model-unavailable' : `${Math.round(score * 100)}% demo score`} is not a calibrated probability or a safety limit. The dataset card warns that it is synthetic and not team telemetry. Use measured vehicle data and validated simulation for decisions.`;
+      }
+      if (/spring|rate|calculat|stiffness|wheel/.test(text)) {
+        return `For the current inputs, the first-pass rates are <strong>front ${format(c.front.springRate / 1000, 1)} N/mm</strong> and <strong>rear ${format(c.rear.springRate / 1000, 1)} N/mm</strong> at the spring. Wheel rates are ${format(c.front.wheelRate / 1000, 1)} and ${format(c.rear.wheelRate / 1000, 1)} N/mm. These assume linear springs, a constant motion ratio, and sprung corner mass estimated from axle weight minus your unsprung-mass inputs.`;
+      }
+      if (/frequency|ride|target|comfort|ratio/.test(text)) {
+        return `Your targets are <strong>${format(c.input.frontFreq, 2)} Hz front</strong> and <strong>${format(c.input.rearFreq, 2)} Hz rear</strong> (rear/front ${format(c.input.rearFreq / c.input.frontFreq, 2)}). Ride frequency is the undamped sprung-mass body-mode estimate. Damping, tire stiffness, pitch coupling, motion-ratio variation, and actual corner weights can shift real response.`;
+      }
+      if (/checklist|validat|before|next|measure|test|what should/.test(text)) {
+        return `Before selecting hardware, validate: <strong>1.</strong> Weigh each corner at design fuel/load. <strong>2.</strong> Measure motion ratio through full travel. <strong>3.</strong> Check spring/damper fit, coil bind, bump-stop engagement, and bump/rebound travel. <strong>4.</strong> Include tire rate and unsprung modes in a quarter-car model. <strong>5.</strong> Set damping and anti-roll-bar rates separately, then confirm with controlled testing. This workbench is a first-pass sizing aid, not a complete vehicle model.`;
+      }
+      if (/compare|softer|stiffer|change/.test(text)) {
+        const softer = (c.input.frontFreq * 0.95) ** 2 * c.front.sprungMass / c.input.frontMotion ** 2 / 1000;
+        return `A 5% lower front ride target would reduce front spring rate from <strong>${format(c.front.springRate / 1000, 1)}</strong> to <strong>${format(softer, 1)} N/mm</strong>, a ${format((1 - softer / (c.front.springRate / 1000)) * 100, 1)}% reduction. For a fixed sprung mass and motion ratio, spring rate scales with frequency squared.`;
+      }
+      return `I can work with the current ${format(c.input.mass)} kg baseline. Try asking for a spring-rate calculation, ride-frequency explanation, softer/stiffer comparison, dataset details, or a validation checklist. For broader engineering questions, configure a Hugging Face token on the server to enable the hosted language model.`;
+    }
+
+    async function sendMessage(text) {
+      const message = text.trim();
+      if (!message) return;
+      renderMessage('user', message);
+      byId('chatInput').value = '';
+      const history = [...byId('messages').querySelectorAll('.message')].slice(-8).map(item => ({ role: item.classList.contains('user') ? 'user' : 'assistant', content: item.querySelector('.bubble').textContent }));
+      const pending = renderMessage('assistant', '<span class="loading" aria-label="Thinking"><i></i><i></i><i></i></span>', true);
+      let answer = localAnswer(message);
+      let agentTrace = [];
+      try {
+        const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history, context: asContext() }) });
+        if (response.ok) {
+          const payload = await response.json();
+          if (payload.reply) answer = payload.reply;
+          if (Array.isArray(payload.trace)) agentTrace = payload.trace;
+          if (payload.warning) agentTrace.push({ summary: payload.warning });
+          if (payload.mode === 'huggingface-agent') byId('apiState').textContent = 'Hosted agent';
+          else if (payload.mode === 'local-agent') byId('apiState').textContent = 'Local agent';
+        }
+      } catch (_) { /* The built-in engineering assistant works without the optional API. */ }
+      if (agentTrace.length) {
+        const trace = document.createElement('div');
+        trace.className = 'agent-trace';
+        trace.textContent = `AGENT STEPS · ${agentTrace.map(step => step.summary).join(' · ')}`;
+        pending.insertBefore(trace, pending.querySelector('.bubble'));
+      }
+      pending.querySelector('.bubble').innerHTML = escapeHtml(answer).replace(/&lt;(strong|\/strong)&gt;/g, '<$1>').replace(/&lt;(code|\/code)&gt;/g, '<$1>');
+      byId('messages').scrollTop = byId('messages').scrollHeight;
+    }
+
+    function escapeHtml(value) { return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]); }
+
+    function showNotice(message) {
+      const notice = byId('notice');
+      notice.textContent = message;
+      notice.classList.add('show');
+      clearTimeout(noticeTimer);
+      noticeTimer = setTimeout(() => notice.classList.remove('show'), 2600);
+    }
+
+    function compareSetup() {
+      const c = lastCalc || calculate();
+      const nextFrequency = c.input.frontFreq * 0.95;
+      const nextRate = (2 * Math.PI * nextFrequency) ** 2 * c.front.sprungMass / c.input.frontMotion ** 2 / 1000;
+      renderMessage('assistant', `Setup comparison · front axle<br><br>Current: <strong>${format(c.input.frontFreq, 2)} Hz → ${format(c.front.springRate / 1000, 1)} N/mm</strong><br>Alternative (−5% frequency): <strong>${format(nextFrequency, 2)} Hz → ${format(nextRate, 1)} N/mm</strong><br>Rate change: <strong>${format((nextRate / (c.front.springRate / 1000) - 1) * 100, 1)}%</strong><br><br>This is a spring-only comparison; recheck travel, damping, and platform control.`, true);
+    }
+
+    function exportReport() {
+      const c = lastCalc || calculate();
+      const report = {
+        product: 'STRUT Suspension Engineering Suite',
+        generated_at: new Date().toISOString(),
+        note: 'First-pass estimate. Verify with measured corner weights, motion ratios, travel and validated vehicle testing.',
+        inputs: c.input,
+        outputs: {
+          front: { sprung_mass_kg: c.front.sprungMass, wheel_rate_n_per_mm: c.front.wheelRate / 1000, spring_rate_n_per_mm: c.front.springRate / 1000, static_load_kn: c.front.load / 1000 },
+          rear: { sprung_mass_kg: c.rear.sprungMass, wheel_rate_n_per_mm: c.rear.wheelRate / 1000, spring_rate_n_per_mm: c.rear.springRate / 1000, static_load_kn: c.rear.load / 1000 }
+        },
+        experimental_cascade_score: currentModel ? predictRisk(currentModel.feature_names.map(name => setupFeatures()[name])) : null,
+        cascade_model_notice: 'Trained on a tiny, synthetic Hugging Face demonstration dataset; not calibrated to this vehicle.'
+      };
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'strut-suspension-design-report.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      showNotice('Engineering report exported as JSON.');
+    }
+
+    byId('vehicle').addEventListener('change', event => {
+      const values = presets[event.target.value];
+      fieldIds.forEach(id => { byId(id).value = values[id]; });
+      calculate();
+    });
+    fieldIds.forEach(id => byId(id).addEventListener('input', () => {
+      byId('vehicle').value = 'custom';
+      calculate();
+    }));
+    [['cascadeStiffness', 'stiffnessOutput'], ['cascadeRideHeight', 'heightOutput'], ['cascadeAeroMargin', 'marginOutput'], ['cascadeOscillation', 'oscillationOutput']].forEach(([inputId, outputId]) => {
+      byId(inputId).addEventListener('input', () => {
+        byId(outputId).value = format(n(inputId), 2);
+        updateRisk();
+      });
+    });
+    byId('chatForm').addEventListener('submit', event => { event.preventDefault(); sendMessage(byId('chatInput').value); });
+    document.querySelectorAll('[data-prompt]').forEach(button => button.addEventListener('click', () => sendMessage(button.dataset.prompt)));
+    byId('compareButton').addEventListener('click', compareSetup);
+    byId('compareTool').addEventListener('click', compareSetup);
+    byId('exportButton').addEventListener('click', exportReport);
+    byId('resetButton').addEventListener('click', () => {
+      const values = presets[byId('vehicle').value] || presets.custom;
+      fieldIds.forEach(id => { byId(id).value = values[id]; });
+      calculate();
+      showNotice('Inputs restored to the selected vehicle baseline.');
+    });
+    document.querySelectorAll('.nav-item').forEach(button => button.addEventListener('click', () => {
+      if (button.dataset.prompt) sendMessage(button.dataset.prompt);
+      else if (button.textContent.includes('Comparisons')) compareSetup();
+      else if (button.textContent.includes('Reports')) exportReport();
+      else if (button.textContent.includes('Vehicle library')) byId('vehicle').focus();
+      else document.querySelector('.page-heading').scrollIntoView({ behavior: 'smooth' });
+    }));
+
+    calculate();
+    fetch('/model.json').then(response => response.ok ? response.json() : Promise.reject()).then(model => {
+      currentModel = model;
+      byId('modelStatus').textContent = `Demo classifier · ${model.epochs} epochs · ${model.training_rows} rows`;
+      updateRisk();
+    }).catch(() => { byId('modelStatus').textContent = 'Run python3 train_model.py to generate'; });
+    fetch('/api/health').then(response => response.json()).then(status => {
+      if (status.huggingface_enabled) byId('apiState').textContent = 'Hosted agent';
+    }).catch(() => {});
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "feature_names": [
+    "suspension_stiffness",
+    "ride_height",
+    "aero_stall_margin",
+    "vertical_oscillation"
+  ],
+  "mean": [
+    0.6088888888888888,
+    0.4833333333333333,
+    0.5166666666666667,
+    0.4977777777777778
+  ],
+  "scale": [
+    0.16921022062934643,
+    0.11623730516108462,
+    0.16891812612426568,
+    0.1762433783013187
+  ],
+  "weights": [
+    1.0518154827370194,
+    -0.9236552906343855,
+    -1.3963642096032542,
+    1.35266670505561
+  ],
+  "bias": 0.09946642542335951,
+  "epochs": 600,
+  "training_rows": 9,
+  "validation_rows": 9,
+  "dataset": "ClarusC64/cascade-f1-suspension-rideheight-aerostall-porpoise-v0.1",
+  "license": "MIT",
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "confusion_matrix": {
+      "true_positive": 5,
+      "true_negative": 4,
+      "false_positive": 0,
+      "false_negative": 0
+    }
+  },
+  "limitations": "Synthetic demonstration data with very few rows; not real telemetry and not suitable for vehicle safety decisions."
+}
